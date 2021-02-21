@@ -27,5 +27,9 @@ public class Winnie implements Runnable{
                 e.printStackTrace();
             }
         }
+        synchronized (this){
+            for(Bee bee:bees)
+                bee.setInterrupted();
+        }
     }
 }
