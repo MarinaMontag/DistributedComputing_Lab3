@@ -5,15 +5,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Winnie implements Runnable{
     private final List<Bee>bees;
     private final Pot pot;
-    private final int iterations=5;
-    private final int BEES_CAPACITY=20;
-    private AtomicBoolean semaphore;
+    private final AtomicBoolean semaphore = new AtomicBoolean(false);
     Winnie(Pot pot){
+        int BEES_CAPACITY = 20;
         this.bees=new ArrayList<>(BEES_CAPACITY);
         this.pot=pot;
-        semaphore=new AtomicBoolean(false);
         new Thread(this).start();
-        for(int i=0;i<BEES_CAPACITY;i++)
+        for(int i = 0; i< BEES_CAPACITY; i++)
            bees.add(new Bee(i,this,pot));
     }
 
@@ -23,7 +21,8 @@ public class Winnie implements Runnable{
 
     @Override
     public void run() {
-        for(int i=0;i<iterations;i++){
+        int iterations = 5;
+        for(int i = 0; i< iterations; i++){
             semaphore.set(true);
             synchronized (this){
                 try {

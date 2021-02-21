@@ -1,18 +1,16 @@
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Bee implements Runnable {
-    private Winnie winnie;
-    private Pot pot;
-    private Thread bee;
-    private int number;
-    private AtomicBoolean interrupted;
+    private final Winnie winnie;
+    private final Pot pot;
+    private final int number;
+    private final AtomicBoolean interrupted = new AtomicBoolean(false);
 
     Bee(int number, Winnie winnie, Pot pot) {
-        interrupted=new AtomicBoolean(false);
         this.number = number;
         this.pot = pot;
         this.winnie = winnie;
-        bee = new Thread(this);
+        Thread bee = new Thread(this);
         bee.start();
     }
 
