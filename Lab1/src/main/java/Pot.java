@@ -4,10 +4,11 @@ public class Pot {
     private final int N=100;
     private AtomicInteger honey;
     Pot(){
-       honey.set(0);
+       honey=new AtomicInteger(0);
     }
-    public Integer bringHoney(){
-        return honey.incrementAndGet();
+    public synchronized Integer bringHoney(Bee bee){
+        System.out.println(honey.incrementAndGet()+". Bee #"+bee.getNumber()+" brought some honey");
+        return honey.get();
     }
 
     public void eatHoney(){

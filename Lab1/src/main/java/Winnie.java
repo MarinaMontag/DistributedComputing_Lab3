@@ -1,30 +1,39 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Winnie implements Runnable{
     private final List<Bee>bees;
     private final Pot pot;
     private final int iterations=5;
-    Winnie(List<Bee>bees,Pot pot){
-        this.bees=bees;
+    private final int BEES_CAPACITY=20;
+    private AtomicBoolean semaphore;
+    Winnie(Pot pot){
+        this.bees=new ArrayList<>(BEES_CAPACITY);
         this.pot=pot;
+        semaphore=new AtomicBoolean(false);
         new Thread(this).start();
+        for(int i=0;i<BEES_CAPACITY;i++)
+           bees.add(new Bee(i,this,pot));
     }
+
+    public AtomicBoolean getSemaphore(){
+        return semaphore;
+    }
+
     @Override
     public void run() {
         for(int i=0;i<iterations;i++){
+            semaphore.set(true);
             synchronized (this){
                 try {
                     wait();
+                    semaphore.set(false);
                     pot.eatHoney();
+                    System.out.println("\nWinnie ate all honey and went to bed\n");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
         synchronized (this){
