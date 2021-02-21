@@ -13,4 +13,5 @@ public class Pot {
     public void eatHoney(){
         honey.set(0);
     }
+    public int getCapacity(){return N;}
 }
