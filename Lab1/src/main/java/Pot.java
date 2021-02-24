@@ -7,8 +7,9 @@ public class Pot {
         return honey.get();
     }
 
-    public void eatHoney(){
+    public void eatHoney() throws InterruptedException {
         honey.set(0);
+        Thread.sleep(500);
     }
     public int getCapacity(){
        return 100;

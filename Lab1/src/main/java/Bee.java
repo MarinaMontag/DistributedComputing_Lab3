@@ -31,7 +31,14 @@ public class Bee implements Runnable {
                         winnie.notify();
                 }
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                try {
+                    Thread.sleep(5);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
