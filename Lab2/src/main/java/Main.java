@@ -1,3 +1,4 @@
+import java.util.Random;
 import java.util.concurrent.Semaphore;
 
 public class Main {
@@ -9,7 +10,12 @@ public class Main {
         int limit=7;
         new Barber(barberReady,clientReady,barberDone,clientDone,limit);
         for(int i=0;i<limit;i++){
-            new Client(i+1,barberReady,clientReady,barberDone,clientDone);
+            try {
+                Thread.sleep(new Random().nextInt(2000));
+                new Client(i+1,barberReady,clientReady,barberDone,clientDone);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
