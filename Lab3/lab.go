@@ -22,48 +22,27 @@ const (
 	match
 )
 
-func smokerPaper(signal <-chan int) {
+func smoker(signal <-chan int, ingredient int) {
 	var nextSmoker int
 	for {
 		nextSmoker = <-signal
-		if nextSmoker != paper {
+		if nextSmoker != ingredient {
 			continue
 		}
-		<-table.grass
-		<-table.match
-		fmt.Println("Smoker(paper) is smoking....")
-		time.Sleep(time.Millisecond * 500)
-		wg.Done()
-	}
-
-}
-
-func smokerGrass(signal <-chan int) {
-	var nextSmoker int
-	for {
-		nextSmoker = <-signal
-		if nextSmoker != grass {
-			continue
+		switch nextSmoker {
+		case match:
+			<-table.grass
+			<-table.paper
+			fmt.Println("Smoker(match) is smoking....")
+		case grass:
+			<-table.paper
+			<-table.match
+			fmt.Println("Smoker(grass) is smoking....")
+		case paper:
+			<-table.grass
+			<-table.match
+			fmt.Println("Smoker(paper) is smoking....")
 		}
-		<-table.paper
-		<-table.match
-		fmt.Println("Smoker(grass) is smoking....")
-		time.Sleep(time.Millisecond * 500)
-		wg.Done()
-	}
-
-}
-
-func smokerMatch(signal <-chan int) {
-	var nextSmoker int
-	for {
-		nextSmoker = <-signal
-		if nextSmoker != match {
-			continue
-		}
-		<-table.grass
-		<-table.paper
-		fmt.Println("Smoker(match) is smoking....")
 		time.Sleep(time.Millisecond * 500)
 		wg.Done()
 	}
@@ -110,9 +89,11 @@ func main() {
 		signal := make(chan int, 1)
 		signals[i] = signal
 	}
-	go smokerPaper(signals[0])
-	go smokerGrass(signals[1])
-	go smokerMatch(signals[2])
+
+	go smoker(signals[0], paper)
+	go smoker(signals[1], grass)
+	go smoker(signals[2], match)
+
 	go manager(done, signals)
 	<-done
 }
